@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des Commandes</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 50px auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #667eea;
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        button {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+            margin-right: 5px;
+        }
+
+        .edit-btn {
+            background-color: #4caf50;
+        }
+
+        .edit-btn:hover {
+            background-color: #45a049;
+        }
+
+        .delete-btn {
+            background-color: #f44336;
+        }
+
+        .delete-btn:hover {
+            background-color: #e53935;
+        }
+
+        #error {
+            color: red;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        @media(max-width:800px) {
+            .container {
+                margin: 20px;
+                padding: 15px;
+            }
+
+            table, th, td {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Liste des Commandes</h1>
+
+        <table id="commandes-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Date Réception</th>
+                    <th>Date Remise Prévue</th>
+                    <th>Statut</th>
+                    <th>Prix Total</th>
+                    <th>Code OCR</th>
+                    <th>Client ID</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Les commandes seront ajoutées ici dynamiquement -->
+            </tbody>
+        </table>
+
+        <p id="error"></p>
+    </div>
+
+    <script>
+        const apiUrl = "http://localhost:8083/rest/commandes/all";
+
+        async function loadCommandes() {
+            const errorElem = document.getElementById('error');
+            try {
+                const response = await fetch(apiUrl);
+
+                if (!response.ok) throw new Error("Erreur lors de la récupération des commandes");
+
+                const commandes = await response.json();
+                const tbody = document.querySelector("#commandes-table tbody");
+                tbody.innerHTML = "";
+
+                commandes.forEach(cmd => {
+                    const tr = document.createElement("tr");
+                    tr.innerHTML = `
+                        <td>${cmd.id || "-"}</td>
+                        <td>${cmd.dateReception ? new Date(cmd.dateReception).toLocaleDateString() : "-"}</td>
+                        <td>${cmd.dateRemisePrevue ? new Date(cmd.dateRemisePrevue).toLocaleDateString() : "-"}</td>
+                        <td>${cmd.statut || "-"}</td>
+                        <td>${cmd.prixTotal !== null ? cmd.prixTotal : "-"}</td>
+                        <td>${cmd.codeOcr || "-"}</td>
+                        <td>${cmd.clientId !== null ? cmd.clientId : "-"}</td>
+                        <td>
+                            <button class="edit-btn" onclick="editCommande(${cmd.id})">Modifier</button>
+                            <button class="delete-btn" onclick="deleteCommande(${cmd.id})">Supprimer</button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+
+            } catch (err) {
+                console.error(err);
+                errorElem.textContent = "Impossible de charger les commandes. Vérifiez le serveur.";
+            }
+        }
+
+        // Modifier une commande
+        function editCommande(id) {
+            const newStatut = prompt("Entrez le nouveau statut :");
+            if (!newStatut) return;
+
+            fetch(`http://localhost:8083/rest/commandes/update/${id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ statut: newStatut })
+            })
+            .then(res => {
+                if (!res.ok) throw new Error("Erreur lors de la modification");
+                loadCommandes(); // recharge le tableau
+            })
+            .catch(err => {
+                console.error(err);
+                document.getElementById('error').textContent = "Impossible de modifier la commande.";
+            });
+        }
+
+        // Supprimer une commande
+        function deleteCommande(id) {
+            if (!confirm("Voulez-vous vraiment supprimer cette commande ?")) return;
+
+            fetch(`http://localhost:8083/rest/commandes/delete/${id}`, {
+                method: "DELETE"
+            })
+            .then(res => {
+                if (!res.ok) throw new Error("Erreur lors de la suppression");
+                loadCommandes(); // recharge le tableau
+            })
+            .catch(err => {
+                console.error(err);
+                document.getElementById('error').textContent = "Impossible de supprimer la commande.";
+            });
+        }
+
+        window.onload = loadCommandes;
+    </script>
+
+</body>
+</html>

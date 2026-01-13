@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Pressing Intelligent et Numérique</title>
+  <link rel="stylesheet" href="style.css">
+  
+    <nav>
+        <a href="login.html">Login</a>
+        <a href="commande.html">Commandes</a>
+        <a href="dashbord.html">Dashbord</a>
+    </nav>
+</head>
+<body>
+    <style>
+        
+        /* ========== SECTION HERO ========== */
+        .hero-section {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        /* Animation de fond avec bulles */
+        .hero-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .bubble {
+            position: absolute;
+            bottom: -100px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: rise 15s infinite ease-in;
+        }
+
+        .bubble:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            left: 10%;
+            animation-duration: 12s;
+            animation-delay: 0s;
+        }
+
+        .bubble:nth-child(2) {
+            width: 60px;
+            height: 60px;
+            left: 25%;
+            animation-duration: 10s;
+            animation-delay: 2s;
+        }
+
+        .bubble:nth-child(3) {
+            width: 100px;
+            height: 100px;
+            left: 40%;
+            animation-duration: 14s;
+            animation-delay: 1s;
+        }
+
+        .bubble:nth-child(4) {
+            width: 70px;
+            height: 70px;
+            left: 60%;
+            animation-duration: 11s;
+            animation-delay: 3s;
+        }
+
+        .bubble:nth-child(5) {
+            width: 90px;
+            height: 90px;
+            left: 75%;
+            animation-duration: 13s;
+            animation-delay: 0.5s;
+        }
+
+        .bubble:nth-child(6) {
+            width: 50px;
+            height: 50px;
+            left: 88%;
+            animation-duration: 9s;
+            animation-delay: 2.5s;
+        }
+
+        @keyframes rise {
+            0% {
+                bottom: -100px;
+                transform: translateX(0) scale(1);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                bottom: 110vh;
+                transform: translateX(100px) scale(0.5);
+                opacity: 0;
+            }
+        }
+
+        /* Contenu du Hero */
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: white;
+            padding: 20px;
+            max-width: 900px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+   <section class="hero-section">
+        <!-- Animation de fond avec bulles -->
+        <div class="hero-background">
+            <div class="bubble"></div>
+            <div class="bubble"></div>
+            <div class="bubble"></div>
+            <div class="bubble"></div>
+            <div class="bubble"></div>
+            <div class="bubble"></div>
+        </div>
+  <!-- Contenu principal -->
+        <div class="hero-content">
+            <div class="hero-icon">🧺</div>
+            
+            <h1 class="hero-title">Pressin</h1>
+            
+            <p class="hero-subtitle">Votre pressing professionnel à portée de clic</p>
+            
+            <p class="hero-description">
+                Service de nettoyage premium pour vos vêtements. 
+                Collecte et livraison à domicile en 48h. 
+               <br> Qualité garantie, 
+                                  <br>satisfaction assurée.
+            </p>
+    
+             <!-- Boutons CTA -->
+            <div class="cta-buttons">
+                <a href="#Ordre" class="btn btn-primary">
+                    📦 Passer une commande
+                </a>
+                <a href="#services" class="btn btn-secondary">
+                    ✨ Voir nos services
+                </a>
+            </div>
+
+             <!-- Badges de confiance -->
+            <div class="trust-badges">
+                <div class="badge">
+                    <div class="badge-icon">⚡</div>
+                    <div class="badge-text">Livraison rapide</div>
+                </div>
+                <div class="badge">
+                    <div class="badge-icon">🏆</div>
+                    <div class="badge-text">Qualité premium</div>
+                </div>
+                <div class="badge">
+                    <div class="badge-icon">💯</div>
+                    <div class="badge-text">Satisfaction garantie</div>
+                </div>
+            </div>
+        </div>
+        <!-- Indicateur de scroll -->
+        <div class="scroll-indicator">
+            <span></span>
+        </div>
+    </section>
+
+    <!-- Section suivante (exemple) -->
+    <section id="services" style="padding: 100px 20px; text-align: center; background: white;">
+        <h2 style="font-size: 2.5rem; color: #667eea; margin-bottom: 20px;">Nos Services</h2>
+        <p style="font-size: 1.2rem; color: #666;">Découvrez notre gamme complète de services de pressing...</p>
+    </section>
+
+    <script>
+   
+ 

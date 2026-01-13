@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des Articles</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 50px auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .form-article {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .form-article input,
+        .form-article button {
+            padding: 10px 15px;
+            font-size: 1rem;
+            border-radius: 50px;
+            border: 1px solid #ccc;
+            outline: none;
+        }
+
+        .form-article button {
+            background: #667eea;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .form-article button:hover {
+            background: #764ba2;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #667eea;
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        #error {
+            color: red;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        @media(max-width:600px) {
+            .form-article {
+                flex-direction: column;
+            }
+
+            table, th, td {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Liste des Articles</h2>
+
+        <div class="form-article">
+            <input id="type" placeholder="Type vêtement">
+            <input id="matiere" placeholder="Matière">
+            <button onclick="addArticle()">Ajouter</button>
+        </div>
+
+        <p id="error"></p>
+
+        <table id="articles-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Type Vêtement</th>
+                    <th>Matière</th>
+                    <th>Date Création</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Les articles seront ajoutés ici dynamiquement -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const apiUrl = "http://localhost:8083/rest/articles/all"; // ton endpoint GET
+
+        async function loadArticles() {
+            const errorElem = document.getElementById('error');
+            try {
+                const response = await fetch(apiUrl);
+                if (!response.ok) throw new Error("Erreur lors de la récupération des articles");
+
+                const articles = await response.json();
+                const tbody = document.querySelector("#articles-table tbody");
+                tbody.innerHTML = "";
+
+                articles.forEach(article => {
+                    const tr = document.createElement("tr");
+                    tr.innerHTML = `
+                        <td>${article.id || "-"}</td>
+                        <td>${article.typeVetement || "-"}</td>
+                        <td>${article.matiere || "-"}</td>
+                        <td>${article.dateCreation ? new Date(article.dateCreation).toLocaleDateString() : "-"}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (err) {
+                console.error(err);
+                errorElem.textContent = "Impossible de charger les articles. Vérifiez le serveur.";
+            }
+        }
+
+        async function addArticle() {
+            const type = document.getElementById('type').value;
+            const matiere = document.getElementById('matiere').value;
+            const errorElem = document.getElementById('error');
+
+            if (!type || !matiere) {
+                errorElem.textContent = "Veuillez remplir tous les champs";
+                return;
+            }
+
+            try {
+                const response = await fetch("http://localhost:8083/rest/articles/create", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ typeVetement: type, matiere: matiere })
+                });
+
+                if (!response.ok) throw new Error("Erreur lors de l'ajout de l'article");
+
+                document.getElementById('type').value = "";
+                document.getElementById('matiere').value = "";
+                errorElem.textContent = "";
+
+                loadArticles(); // recharge la liste
+            } catch (err) {
+                console.error(err);
+                errorElem.textContent = "Impossible d'ajouter l'article. Vérifiez le serveur.";
+            }
+        }
+
+        window.onload = loadArticles;
+    </script>
+</body>
+
+</html>
+
