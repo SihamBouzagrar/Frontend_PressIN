@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
-    <title>Connexion</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>Connexion - Pressing</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        /* Reset global */
+        /* ===================== GLOBAL RESET ===================== */
         * {
             margin: 0;
             padding: 0;
@@ -19,10 +20,105 @@
             justify-content: center;
             align-items: center;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            overflow: hidden;
         }
 
-        /* Card de connexion */
+        /* ===================== BUBBLES ===================== */
+        .bubble-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+            /* derrière la carte */
+        }
+
+        .bubble {
+            position: absolute;
+            bottom: -100px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            animation: rise 15s infinite ease-in;
+        }
+
+        .bubble:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            left: 10%;
+            animation-duration: 12s;
+            animation-delay: 0s;
+        }
+
+        .bubble:nth-child(2) {
+            width: 60px;
+            height: 60px;
+            left: 25%;
+            animation-duration: 10s;
+            animation-delay: 2s;
+        }
+
+        .bubble:nth-child(3) {
+            width: 100px;
+            height: 100px;
+            left: 40%;
+            animation-duration: 14s;
+            animation-delay: 1s;
+        }
+
+        .bubble:nth-child(4) {
+            width: 70px;
+            height: 70px;
+            left: 60%;
+            animation-duration: 11s;
+            animation-delay: 3s;
+        }
+
+        .bubble:nth-child(5) {
+            width: 90px;
+            height: 90px;
+            left: 75%;
+            animation-duration: 13s;
+            animation-delay: 0.5s;
+        }
+
+        .bubble:nth-child(6) {
+            width: 50px;
+            height: 50px;
+            left: 88%;
+            animation-duration: 9s;
+            animation-delay: 2.5s;
+        }
+
+        @keyframes rise {
+            0% {
+                bottom: -100px;
+                transform: translateX(0) scale(1);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                bottom: 110vh;
+                transform: translateX(100px) scale(0.5);
+                opacity: 0;
+            }
+        }
+
+        /* ===================== CARD FORM ===================== */
         .card {
+            position: relative;
+            z-index: 1;
+            /* devant les bulles */
             background: rgba(255, 255, 255, 0.95);
             padding: 40px 30px;
             border-radius: 15px;
@@ -34,9 +130,15 @@
         }
 
         .card h2 {
-            margin-bottom: 25px;
+            margin-bottom: 15px;
             color: #333;
             font-size: 2rem;
+        }
+
+        .card .form-subtitle {
+            margin-bottom: 25px;
+            color: #666;
+            font-size: 0.95rem;
         }
 
         .card input {
@@ -47,7 +149,6 @@
             border-radius: 50px;
             font-size: 1rem;
             outline: none;
-            transition: all 0.3s ease;
         }
 
         .card input:focus {
@@ -70,8 +171,6 @@
 
         .card button:hover {
             background: #764ba2;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
         }
 
         #error {
@@ -81,12 +180,12 @@
             min-height: 18px;
         }
 
-        /* Animation fadeInUp */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
                 transform: translateY(30px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -103,26 +202,75 @@
                 font-size: 1.5rem;
             }
 
-            .card input, .card button {
+            .card input,
+            .card button {
                 padding: 12px 15px;
                 font-size: 1rem;
             }
         }
     </style>
 </head>
+
 <body>
+    <!-- Bubbles -->
+    <div class="bubble-container">
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+    </div>
 
-<div class="card">
-    <h2>Connexion</h2>
+    <div class="card">
+        <h2>Connexion</h2>
+        <p class="form-subtitle">Bienvenue ! Connectez-vous à votre compte</p>
 
-    <input type="email" id="email" placeholder="Email">
-    <input type="password" id="password" placeholder="Mot de passe">
+        <form id="login-form">
+            <input type="email" id="email" name="email" placeholder="Email" required>
+            <input type="password" id="password" name="password" placeholder="Mot de passe" required>
+            <button type="submit">Se connecter</button>
+        </form>
+        <p id="error"></p>
+        <p>Pas de compte ? <a href="register.html">Créer un compte</a></p>
+    </div>
 
-    <button onclick="login()">Se connecter</button>
-    <p id="error"></p>
-</div>
+    <script>
+        const API_BASE_URL = 'http://localhost:8083/api';
 
-<script src="js/auth.js"></script>
+       document.addEventListener('DOMContentLoaded', () => {
+    const loginForm = document.getElementById('login-form');
+    const errorEl = document.getElementById('error');
+
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        errorEl.textContent = '';
+
+        try {
+            const response = await fetch(`http://localhost:8083/auth/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, passWord: password }) // note: passWord avec majuscule P
+            });
+
+            if (!response.ok) {
+                throw new Error('Email ou mot de passe incorrect');
+            }
+
+            const user = await response.json();
+            localStorage.setItem('currentUser', JSON.stringify(user));
+
+            window.location.href = 'dashboard.html';
+        } catch (err) {
+            errorEl.textContent = err.message;
+        }
+    });
+});
+    </script>
 </body>
-</html>
 
+</html>

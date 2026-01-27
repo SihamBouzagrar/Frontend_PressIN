@@ -1,26 +1,34 @@
+// Connexion simple (à remplacer par fetch vers backend Spring Boot)
 function login() {
-
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
+    const error = document.getElementById("error");
 
-    fetch(`http://localhost:8083/rest/person/email/${email}`)
-        .then(res => {
-            if (!res.ok) throw new Error("Utilisateur introuvable");
-            return res.json();
-        })
-        .then(user => {
+    if (email === "admin@pressing.com" && password === "admin123") {
+        localStorage.setItem("role", "admin");
+        window.location.href = "dashboard.html";
+    } else if (email === "client@pressing.com" && password === "client123") {
+        localStorage.setItem("role", "client");
+        window.location.href = "dashboard.html";
+    } else {
+        error.textContent = "Email ou mot de passe incorrect";
+    }
+}
 
-            // Vérification du mot de passe
-            if (user.passWord !== password) {
-                document.getElementById("error").innerText = "Mot de passe incorrect";
-                return;
-            }
+function handleRegister(event) {
+    event.preventDefault();
+    const error = document.getElementById("error-register");
+    error.textContent = "Inscription temporaire simulée !";
+}
 
-            // Login OK
-            localStorage.setItem("user", JSON.stringify(user));
-            window.location.href = "dashboard.html";
-        })
-        .catch(() => {
-            document.getElementById("error").innerText = "Email introuvable";
-        });
+// Dashboard navigation
+function showSection(sectionId) {
+    document.querySelectorAll(".content-section").forEach(sec => sec.style.display = "none");
+    document.getElementById(sectionId + "-section").style.display = "block";
+}
+
+// Logout
+function handleLogout() {
+    localStorage.removeItem("role");
+    window.location.href = "index.html";
 }
