@@ -598,6 +598,7 @@
 </head>
 
 <body>
+
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-brand">
@@ -605,7 +606,7 @@
             <span>PressIN</span>
         </div>
         <div class="nav-menu">
-            <a href="dashboard.html" class="nav-link active">
+            <a href="index.html" class="nav-link active">
                 <span>🏠</span> Accueil
             </a>
             <a href="new-order.html" class="nav-link">
@@ -621,7 +622,7 @@
         <div class="nav-user">
             <div class="user-avatar" id="user-avatar">JD</div>
             <div class="user-info">
-                <h4 id="user-name">John Doe</h4>
+                <h4 id="user-name">siham bouzagrar</h4>
                 <p>Client Premium</p>
             </div>
         </div>
@@ -631,7 +632,7 @@
     <div class="container">
         <!-- Page Header -->
         <div class="page-header">
-            <h1>Bienvenue, <span id="dashboard-user-name">John</span> ! <span class="welcome-time"
+            <h1>Bienvenue, <span id="dashboard-user-name">siham</span> ! <span class="welcome-time"
                     id="greeting">👋</span></h1>
             <p>Gérez vos commandes de pressing en toute simplicité</p>
         </div>
@@ -689,12 +690,13 @@
                 <h2>Actions Rapides</h2>
             </div>
             <div class="actions-grid">
-                <a href="commande.html" class="action-card">
+                <a href="new-order.html" class="action-card">
                     <span class="action-icon">➕</span>
                     <h3>Nouvelle Commande</h3>
                     <p>Créez une nouvelle commande de pressing en quelques clics</p>
+                   
                 </a>
-
+<button id="logout-btn">Se Déconnecter</button>
                 <a href="commande.html?filter=PRET" class="action-card">
                     <span class="action-icon">📋</span>
                     <h3>Commandes Prêtes</h3>
@@ -737,121 +739,121 @@
         </div>
     </div>
 
-   <script>
-    // URL de base de ton API backend
-    const API_BASE_URL = 'http://localhost:8083/api';
+    <script>
+        // URL de base de ton API backend
+        const API_BASE_URL = 'http://localhost:8083/api';
 
-    // Utilisateur connecté
-    let currentUser = null;
+        // Utilisateur connecté
+        let currentUser = null;
 
-    // Initialisation au chargement de la page
-    document.addEventListener('DOMContentLoaded', () => {
-        loadUserData();
-        setGreeting();
-        loadDashboard();
-    });
+        // Initialisation au chargement de la page
+        document.addEventListener('DOMContentLoaded', () => {
+            loadUserData();
+            setGreeting();
+            loadDashboard();
+        });
 
-    // Charger les données utilisateur depuis localStorage
-    function loadUserData() {
-        const savedUser = localStorage.getItem('currentUser');
-        if (savedUser) {
-            currentUser = JSON.parse(savedUser);
-            updateUserDisplay();
-        } else {
-            // Rediriger vers la page login si non connecté
-            window.location.href = 'login.html';
+        // Charger les données utilisateur depuis localStorage
+        function loadUserData() {
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                updateUserDisplay();
+            } else {
+                // Rediriger vers la page login si non connecté
+                window.location.href = 'login.html';
+            }
         }
-    }
 
-    // Mettre à jour l'affichage de l'utilisateur
-    function updateUserDisplay() {
-        const initials = (currentUser.firstname[0] + currentUser.lastname[0]).toUpperCase();
-        document.getElementById('user-avatar').textContent = initials;
-        document.getElementById('user-name').textContent = `${currentUser.firstname} ${currentUser.lastname}`;
-        document.getElementById('dashboard-user-name').textContent = currentUser.firstname;
-    }
-
-    // Définir le message de bienvenue selon l'heure
-    function setGreeting() {
-        const hour = new Date().getHours();
-        const greetingEl = document.getElementById('greeting');
-
-        if (hour < 12) {
-            greetingEl.textContent = '🌅';
-        } else if (hour < 18) {
-            greetingEl.textContent = '☀️';
-        } else {
-            greetingEl.textContent = '🌙';
+        // Mettre à jour l'affichage de l'utilisateur
+        function updateUserDisplay() {
+            const initials = (currentUser.firstname[0] + currentUser.lastname[0]).toUpperCase();
+            document.getElementById('user-avatar').textContent = initials;
+            document.getElementById('user-name').textContent = `${currentUser.firstname} ${currentUser.lastname}`;
+            document.getElementById('dashboard-user-name').textContent = currentUser.firstname;
         }
-    }
 
-    // Charger le dashboard : commandes + statistiques
-    async function loadDashboard() {
-        showLoading(true);
-        try {
-            // 1️⃣ Récupérer les commandes du client connecté
-            const res = await fetch(`${API_BASE_URL}/commandes/client/${currentUser.id}`);
-            if (!res.ok) throw new Error('Impossible de récupérer les commandes');
-            const commandes = await res.json();
+        // Définir le message de bienvenue selon l'heure
+        function setGreeting() {
+            const hour = new Date().getHours();
+            const greetingEl = document.getElementById('greeting');
 
-            // 2️⃣ Charger les articles pour chaque commande
-            for (const commande of commandes) {
-                commande.articles = await loadOrderArticles(commande.id);
+            if (hour < 12) {
+                greetingEl.textContent = '🌅';
+            } else if (hour < 18) {
+                greetingEl.textContent = '☀️';
+            } else {
+                greetingEl.textContent = '🌙';
+            }
+        }
+
+        // Charger le dashboard : commandes + statistiques
+        async function loadDashboard() {
+            showLoading(true);
+            try {
+                // 1️⃣ Récupérer les commandes du client connecté
+                const res = await fetch(`${API_BASE_URL}/commandes/client/${currentUser.id}`);
+                if (!res.ok) throw new Error('Impossible de récupérer les commandes');
+                const commandes = await res.json();
+
+                // 2️⃣ Charger les articles pour chaque commande
+                for (const commande of commandes) {
+                    commande.articles = await loadOrderArticles(commande.id);
+                }
+
+                // 3️⃣ Mettre à jour les statistiques
+                updateStatistics(commandes);
+
+                // 4️⃣ Afficher les 3 commandes récentes
+                displayRecentOrders(commandes.slice(0, 3));
+
+                showLoading(false);
+            } catch (err) {
+                console.error('Erreur dashboard:', err);
+                showLoading(false);
+                showEmptyState();
+            }
+        }
+
+        // Mettre à jour les statistiques du dashboard
+        function updateStatistics(commandes) {
+            const total = commandes.length;
+            const enCours = commandes.filter(c => c.statut === 'EN_COURS' || c.statut === 'EN_ATTENTE').length;
+            const pret = commandes.filter(c => c.statut === 'PRET').length;
+            const montantTotal = commandes.reduce((sum, c) => sum + (c.prixTotal || 0), 0);
+
+            document.getElementById('stat-total').textContent = total;
+            document.getElementById('stat-en-cours').textContent = enCours;
+            document.getElementById('stat-pret').textContent = pret;
+            document.getElementById('stat-montant').textContent = montantTotal.toFixed(2) + ' MAD';
+        }
+
+        // Afficher les commandes récentes
+        function displayRecentOrders(commandes) {
+            const ordersList = document.getElementById('orders-list');
+
+            if (commandes.length === 0) {
+                showEmptyState();
+                return;
             }
 
-            // 3️⃣ Mettre à jour les statistiques
-            updateStatistics(commandes);
-
-            // 4️⃣ Afficher les 3 commandes récentes
-            displayRecentOrders(commandes.slice(0, 3));
-
-            showLoading(false);
-        } catch (err) {
-            console.error('Erreur dashboard:', err);
-            showLoading(false);
-            showEmptyState();
-        }
-    }
-
-    // Mettre à jour les statistiques du dashboard
-    function updateStatistics(commandes) {
-        const total = commandes.length;
-        const enCours = commandes.filter(c => c.statut === 'EN_COURS' || c.statut === 'EN_ATTENTE').length;
-        const pret = commandes.filter(c => c.statut === 'PRET').length;
-        const montantTotal = commandes.reduce((sum, c) => sum + (c.prixTotal || 0), 0);
-
-        document.getElementById('stat-total').textContent = total;
-        document.getElementById('stat-en-cours').textContent = enCours;
-        document.getElementById('stat-pret').textContent = pret;
-        document.getElementById('stat-montant').textContent = montantTotal.toFixed(2) + ' MAD';
-    }
-
-    // Afficher les commandes récentes
-    function displayRecentOrders(commandes) {
-        const ordersList = document.getElementById('orders-list');
-
-        if (commandes.length === 0) {
-            showEmptyState();
-            return;
+            ordersList.innerHTML = commandes.map(order => createOrderCard(order)).join('');
         }
 
-        ordersList.innerHTML = commandes.map(order => createOrderCard(order)).join('');
-    }
+        // Créer une carte de commande HTML
+        function createOrderCard(order) {
+            const statutLabels = {
+                'EN_ATTENTE': 'En Attente',
+                'EN_COURS': 'En Cours',
+                'PRET': 'Prêt',
+                'LIVRE': 'Livré'
+            };
 
-    // Créer une carte de commande HTML
-    function createOrderCard(order) {
-        const statutLabels = {
-            'EN_ATTENTE': 'En Attente',
-            'EN_COURS': 'En Cours',
-            'PRET': 'Prêt',
-            'LIVRE': 'Livré'
-        };
-
-        return `
+            return `
             <div class="order-card">
                 <div class="order-header">
                     <div>
-                        <div class="order-id">${order.codeOcr}</div>
+                   
                         <div class="order-date">Reçu le ${formatDate(order.dateReception)}</div>
                     </div>
                     <span class="order-status status-${order.statut}">
@@ -881,44 +883,47 @@
                 </div>
             </div>
         `;
-    }
-
-    // Formater une date en français
-    function formatDate(dateString) {
-        if (!dateString) return '-';
-        const date = new Date(dateString);
-        return date.toLocaleDateString('fr-FR', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        });
-    }
-
-    // Afficher ou masquer le loader
-    function showLoading(show) {
-        document.getElementById('loading').style.display = show ? 'block' : 'none';
-        document.getElementById('orders-list').style.display = show ? 'none' : 'block';
-    }
-
-    // Afficher l'état vide si aucune commande
-    function showEmptyState() {
-        document.getElementById('orders-list').style.display = 'none';
-        document.getElementById('empty-state').style.display = 'block';
-    }
-
-    // Charger les articles d'une commande depuis le backend
-    async function loadOrderArticles(commandeId) {
-        try {
-            const res = await fetch(`${API_BASE_URL}/articles/commande/${commandeId}`);
-            if (!res.ok) throw new Error('Erreur chargement articles');
-            return await res.json();
-        } catch (err) {
-            console.error(err);
-            return [];
         }
-    }
 
-</script>
+        // Formater une date en français
+        function formatDate(dateString) {
+            if (!dateString) return '-';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('fr-FR', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        // Afficher ou masquer le loader
+        function showLoading(show) {
+            document.getElementById('loading').style.display = show ? 'block' : 'none';
+            document.getElementById('orders-list').style.display = show ? 'none' : 'block';
+        }
+
+        // Afficher l'état vide si aucune commande
+        function showEmptyState() {
+            document.getElementById('orders-list').style.display = 'none';
+            document.getElementById('empty-state').style.display = 'block';
+        }
+
+        // Charger les articles d'une commande depuis le backend
+        async function loadOrderArticles(commandeId) {
+            try {
+                const res = await fetch(`${API_BASE_URL}/articles/commande/${commandeId}`);
+                if (!res.ok) throw new Error('Erreur chargement articles');
+                return await res.json();
+            } catch (err) {
+                console.error(err);
+                return [];
+            }
+        }
+
+    </script>
+    <footer>
+        <p>PressIN - L'avenir du pressing est numérique . </p>
+    </footer>
 </body>
 
 </html>

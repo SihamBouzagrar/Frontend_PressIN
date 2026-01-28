@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nouvelle Commande - PressIN</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma,  Verdana, sans-serif;
+        }
+
+        body {
+            background: #f5f7fa;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            padding: 20px 40px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2em;
+        }
+
+        .nav {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-btn {
+            background: none;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 1em;
+            color: #4a5568;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+
+        .nav-btn:hover {
+            background: #f7fafc;
+            color: #667eea;
+        }
+
+        .nav-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .page-title {
+            font-size: 2.5em;
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+
+        .page-subtitle {
+            color: #718096;
+            font-size: 1.1em;
+            margin-bottom: 40px;
+        }
+
+        /* Form Card */
+        .form-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: 0.3s;
+        }
+
+        .form-card:hover {
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .form-section {
+            margin-bottom: 35px;
+        }
+
+        .section-title {
+            font-size: 1.3em;
+            color: #2d3748;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-icon {
+            font-size: 1.5em;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #4a5568;
+            font-weight: 500;
+            font-size: 0.95em;
+        }
+
+        .form-input,
+        .form-select {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1em;
+            transition: 0.3s;
+            background: white;
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        /* Clothing Grid */
+        .clothing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .clothing-card {
+            background: #f7fafc;
+            border: 3px solid #e2e8f0;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .clothing-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .clothing-card.selected {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: #667eea;
+            color: white;
+        }
+
+        /* Services */
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .service-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .service-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 3px 10px rgba(102, 126, 234, 0.2);
+        }
+
+        .service-card.selected {
+            background: #eef2ff;
+            border-color: #667eea;
+        }
+
+        .service-checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #cbd5e0;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+        }
+
+        .service-card.selected .service-checkbox {
+            background: #667eea;
+            border-color: #667eea;
+            color: white;
+        }
+
+        .service-info {
+            flex: 1;
+        }
+
+        .service-name {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 4px;
+        }
+
+        .service-price {
+            color: #667eea;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+
+        /* Quantity */
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .quantity-btn {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #667eea;
+            background: white;
+            border-radius: 8px;
+            color: #667eea;
+            font-size: 1.3em;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .quantity-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .quantity-value {
+            font-size: 1.3em;
+            font-weight: 600;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        /* Order Items */
+        .order-items {
+            background: #f7fafc;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .order-item {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: 0.3s;
+        }
+
+        .order-item:hover {
+            transform: translateY(-2px);
+        }
+
+        .item-details {
+            flex: 1;
+        }
+
+        .item-name {
+            font-weight: 600;
+            color: #2d3748;
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+
+        .item-specs {
+            color: #718096;
+            font-size: 0.9em;
+        }
+
+        .item-price {
+            font-size: 1.3em;
+            color: #667eea;
+            font-weight: 600;
+            margin-right: 20px;
+        }
+
+        .item-remove {
+            background: #fed7d7;
+            color: #c53030;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .item-remove:hover {
+            background: #fc8181;
+            color: white;
+        }
+
+        /* Summary */
+        .order-summary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .summary-row.total {
+            font-size: 1.5em;
+            font-weight: bold;
+            padding-top: 15px;
+            border-top: 2px solid rgba(255, 255, 255, 0.3);
+            margin-top: 15px;
+        }
+
+        /* Buttons */
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 16px 32px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #f7fafc;
+        }
+
+        @media (max-width:768px) {
+
+            .clothing-grid,
+            .service-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="logo">
+            <div class="logo-icon">🧺</div><span>PressIN</span>
+        </div>
+        <nav class="nav">
+            <a href="index.html" class="nav-link active">
+                <span>🏠</span> Accueil
+            </a>
+           <a href="commande.html" class="nav-link">
+                <span>📦</span> Mes Commandes
+            </a>
+           <a href="profile.html" class="nav-link">
+                <span>👤</span>   Mon Profil
+            </a>
+          
+        </nav>
+    </div>
+
+    <div class="container">
+        <h1 class="page-title">➕ Nouvelle Commande</h1>
+        <p class="page-subtitle">Créez votre commande rapidement</p>
+
+        <div class="form-card">
+            <!-- Type de vêtement -->
+            <div class="form-section">
+                <h2 class="section-title"><span class="section-icon">👕</span>Type de Vêtement</h2>
+                <div class="clothing-grid" id="clothingGrid"></div>
+            </div>
+
+            <!-- Matière -->
+            <div class="form-section">
+                <h2 class="section-title"><span class="section-icon">🧵</span>Matière</h2>
+                <div class="form-group">
+                    <label class="form-label" for="material">Sélectionnez la matière</label>
+                    <select class="form-select" id="material">
+                        <option value="">-- Choisir --</option>
+                        <option value="coton">Coton</option>
+                        <option value="jean">Jean</option>
+                        <option value="soie">Soie</option>
+                        <option value="laine">Laine</option>
+                        <option value="polyester">Polyester</option>
+                        <option value="lin">Lin</option>
+                        <option value="cuir">Cuir</option>
+                        <option value="synthétique">Synthétique</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Services -->
+            <div class="form-section">
+                <h2 class="section-title"><span class="section-icon">✨</span>Services Demandés</h2>
+                <div class="service-grid" id="serviceGrid"></div>
+            </div>
+
+            <!-- Quantité -->
+            <div class="form-section">
+                <h2 class="section-title"><span class="section-icon">🔢</span>Quantité</h2>
+                <div class="quantity-control">
+                    <button class="quantity-btn" onclick="decreaseQuantity()">−</button>
+                    <span class="quantity-value" id="quantity">1</span>
+                    <button class="quantity-btn" onclick="increaseQuantity()">+</button>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" onclick="addItem()">➕ Ajouter à la commande</button>
+
+            <!-- Liste des articles -->
+            <div class="form-section">
+                <h2 class="section-title"><span class="section-icon">📋</span>Articles de la commande</h2>
+                <div class="order-items" id="orderItems">
+                    <div class="empty-state">
+                        <div class="empty-icon">📦</div>
+                        <p>Aucun article ajouté pour le moment</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Résumé -->
+            <div class="order-summary" id="orderSummary" style="display:none;">
+                <h3 style="margin-bottom:20px;font-size:1.5em;">📊 Résumé</h3>
+                <div class="summary-row"><span>Nombre d'articles:</span><span id="totalItems">0</span></div>
+                <div class="summary-row"><span>Sous-total:</span><span id="subtotal">0 MAD</span></div>
+                <div class="summary-row"><span>TVA (20%):</span><span id="tax">0 MAD</span></div>
+                <div class="summary-row total"><span>Total:</span><span id="total">0 MAD</span></div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="cancelOrder()">❌ Annuler</button>
+                <button class="btn btn-primary" onclick="validateOrder()">✅ Valider</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const clothingTypes = [
+            { id: 'chemise', name: 'Chemise', icon: '👔', basePrice: 15 },
+            { id: 'pantalon', name: 'Pantalon', icon: '👖', basePrice: 18 },
+            { id: 'robe', name: 'Robe', icon: '👗', basePrice: 25 },
+            { id: 'pull', name: 'Pull', icon: '🧥', basePrice: 20 },
+            { id: 'tshirt', name: 'T-shirt', icon: '👕', basePrice: 12 },
+            { id: 'jupe', name: 'Jupe', icon: '🩱', basePrice: 16 },
+            { id: 'costume', name: 'Costume', icon: '🤵', basePrice: 35 },
+            { id: 'manteau', name: 'Manteau', icon: '🧥', basePrice: 30 }
+        ];
+
+        const services = [
+            { id: 'nettoyage', name: 'Nettoyage', price: 10, icon: '🧼' },
+            { id: 'repassage', name: 'Repassage', price: 20, icon: '🔥' },
+            { id: 'detachage', name: 'Détachage', price: 30, icon: '🎨' },
+            { id: 'pliage', name: 'Pliage', price: 40, icon: '📦' }
+        ];
+
+        let selectedClothing = null;
+        let selectedServices = new Set();
+        let quantity = 1;
+        let orderItems = [];
+
+        function init() {
+            renderClothingGrid();
+            renderServiceGrid();
+        }
+
+        function renderClothingGrid() {
+            const grid = document.getElementById('clothingGrid');
+            grid.innerHTML = clothingTypes.map(c => `
+        <div class="clothing-card" onclick="selectClothing('${c.id}', event)">
+            <div class="clothing-icon">${c.icon}</div>
+            <div class="clothing-name">${c.name}</div>
+        </div>`).join('');
+        }
+
+        function renderServiceGrid() {
+            const grid = document.getElementById('serviceGrid');
+            grid.innerHTML = services.map(s => `
+        <div class="service-card" onclick="toggleService('${s.id}', event)">
+            <div class="service-checkbox"></div>
+            <div class="service-info">
+                <div class="service-name">${s.icon} ${s.name}</div>
+                <div class="service-price">+${s.price} MAD</div>
+            </div>
+        </div>`).join('');
+        }
+
+        function selectClothing(id, event) {
+            selectedClothing = id;
+            document.querySelectorAll('.clothing-card').forEach(c => c.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
+        }
+
+        function toggleService(id, event) {
+            if (selectedServices.has(id)) {
+                selectedServices.delete(id);
+                event.currentTarget.classList.remove('selected');
+                event.currentTarget.querySelector('.service-checkbox').innerHTML = '';
+            } else {
+                selectedServices.add(id);
+                event.currentTarget.classList.add('selected');
+                event.currentTarget.querySelector('.service-checkbox').innerHTML = '✓';
+            }
+        }
+
+        function increaseQuantity() { quantity++; document.getElementById('quantity').textContent = quantity; }
+        function decreaseQuantity() { if (quantity > 1) { quantity--; document.getElementById('quantity').textContent = quantity; } }
+
+        function addItem() {
+            if (!selectedClothing) { alert('Sélectionnez un vêtement'); return; }
+            const material = document.getElementById('material').value;
+            if (!material) { alert('Choisissez une matière'); return; }
+            if (selectedServices.size === 0) { alert('Choisissez au moins un service'); return; }
+            const c = clothingTypes.find(cl => cl.id === selectedClothing);
+            const sList = Array.from(selectedServices).map(id => services.find(s => s.id === id));
+            const itemPrice = c.basePrice + sList.reduce((sum, s) => sum + s.price, 0);
+            const totalPrice = itemPrice * quantity;
+            const item = {
+                id: Date.now(),
+                clothing: c.name,
+                clothingIcon: c.icon,
+                material: material,
+                services: sList.map(s => s.name).join(', '),
+                quantity: quantity,
+                price: totalPrice
+            };
+            orderItems.push(item);
+            renderOrderItems();
+            updateSummary();
+            resetForm();
+        }
+
+        function renderOrderItems() {
+            const container = document.getElementById('orderItems');
+            if (orderItems.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-icon">📦</div><p>Aucun article ajouté pour le moment</p></div>';
+                return;
+            }
+            container.innerHTML = orderItems.map(i => `
+        <div class="order-item">
+            <div class="item-details">
+                <div class="item-name">${i.clothingIcon} ${i.clothing} x${i.quantity}</div>
+                <div class="item-specs">Matière: ${i.material} | Services: ${i.services}</div>
+            </div>
+            <div class="item-price">${i.price} MAD</div>
+            <button class="item-remove" onclick="removeItem(${i.id})">🗑️ Retirer</button>
+        </div>`).join('');
+        }
+
+        function removeItem(id) { orderItems = orderItems.filter(i => i.id !== id); renderOrderItems(); updateSummary(); }
+        function updateSummary() {
+            const div = document.getElementById('orderSummary');
+            if (orderItems.length === 0) { div.style.display = 'none'; return; }
+            div.style.display = 'block';
+            const subtotal = orderItems.reduce((s, i) => s + i.price, 0);
+            const tax = subtotal * 0.2; const total = subtotal + tax;
+            document.getElementById('totalItems').textContent = orderItems.length;
+            document.getElementById('subtotal').textContent = subtotal.toFixed(2) + ' MAD';
+            document.getElementById('tax').textContent = tax.toFixed(2) + ' MAD';
+            document.getElementById('total').textContent = total.toFixed(2) + ' MAD';
+        }
+        function resetForm() {
+            selectedClothing = null; selectedServices.clear(); quantity = 1;
+            document.querySelectorAll('.clothing-card').forEach(c => c.classList.remove('selected'));
+            document.querySelectorAll('.service-card').forEach(c => { c.classList.remove('selected'); c.querySelector('.service-checkbox').innerHTML = ''; });
+            document.getElementById('material').value = ''; document.getElementById('quantity').textContent = '1';
+        }
+
+      function validateOrder() {
+    if (orderItems.length === 0) { 
+        alert('Commande vide'); 
+        return; 
+    }
+
+    const subtotal = orderItems.reduce((s, i) => s + i.price, 0);
+    const tax = subtotal * 0.2;
+    const total = subtotal + tax;
+
+    if (confirm(`Confirmer la commande de ${orderItems.length} article(s) pour ${total.toFixed(2)} MAD ?`)) {
+
+        const now = new Date();
+        const dateReception = now.toISOString(); // date actuelle
+        const dateRemisePrevue = new Date(now.getTime() + 3*24*60*60*1000).toISOString(); 
+        // +3 jours comme exemple pour la remise prévue
+
+        const data = {
+            user: { id: 1 }, // ⚠️ remplacer 1 par l'ID réel de l'utilisateur connecté
+            statut: "En cours",
+            prixTotal: total.toFixed(2),
+            dateReception: dateReception,
+            dateRemisePrevue: dateRemisePrevue,
+            orderDetails: JSON.stringify(orderItems) // optionnel si tu veux garder les articles
+        };
+
+        fetch('http://localhost:8083/rest/commandes/create', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => {
+            if (!response.ok) throw new Error('Erreur lors de la création de la commande');
+            return response.json();
+        })
+        .then(result => {
+            alert(`Commande validée avec succès ! ID: ${result.id}`);
+            // vider le panier
+            orderItems = [];
+            renderOrderItems();
+            updateSummary();
+            resetForm();
+            // Redirection vers la liste des commandes
+            window.location.href = 'commande.html';
+        })
+        .catch(error => {
+            console.error(error);
+            alert('Impossible de valider la commande');
+        });
+    }
+}
+
+        function cancelOrder() {
+            if (orderItems.length > 0) { if (confirm('Annuler la commande ?')) { orderItems = []; renderOrderItems(); updateSummary(); resetForm(); } }
+            else window.location.href = 'dashbord.html';
+        }
+
+        init();
+    </script>
+</body>
+
+</html>

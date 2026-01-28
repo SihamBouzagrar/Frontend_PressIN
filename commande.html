@@ -6,7 +6,7 @@
     <title>Liste des Commandes</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Tahoma,Verdana, sans-serif;
             margin: 0;
             padding: 0;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -99,6 +99,9 @@
     <div class="container">
         <h1>Liste des Commandes</h1>
 
+
+<!-- Bouton de déconnexion en haut -->
+<button id="logout-btn" style="float:right; margin-bottom:10px;">Se Déconnecter</button>
         <table id="commandes-table">
             <thead>
                 <tr>
@@ -107,7 +110,7 @@
                     <th>Date Remise Prévue</th>
                     <th>Statut</th>
                     <th>Prix Total</th>
-                    <th>Code OCR</th>
+                    
                     <th>Client ID</th>
                     <th>Actions</th>
                 </tr>
@@ -142,7 +145,7 @@
                         <td>${cmd.dateRemisePrevue ? new Date(cmd.dateRemisePrevue).toLocaleDateString() : "-"}</td>
                         <td>${cmd.statut || "-"}</td>
                         <td>${cmd.prixTotal !== null ? cmd.prixTotal : "-"}</td>
-                        <td>${cmd.codeOcr || "-"}</td>
+                  
                         <td>${cmd.clientId !== null ? cmd.clientId : "-"}</td>
                         <td>
                             <button class="edit-btn" onclick="editCommande(${cmd.id})">Modifier</button>

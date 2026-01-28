@@ -264,7 +264,7 @@
             const user = await response.json();
             localStorage.setItem('currentUser', JSON.stringify(user));
 
-            window.location.href = 'dashboard.html';
+            window.location.href = 'dashbord.html';
         } catch (err) {
             errorEl.textContent = err.message;
         }
